@@ -36,6 +36,13 @@ code {
   font-weight: bold;
   text-transform: lowercase;
   padding-bottom: 25%;
+  transform-origin: center 10%;
+}
+
+.currentword[data-status='celebrate'] {
+  animation-name: word_celebrate;
+  animation-duration: 1s;
+  animation-easing-function: ease-in-out;
 }
 
 .input {
@@ -53,6 +60,7 @@ code {
 .currentword > span {
   margin: 2px;
   color: black;
+  display: inline-block;
 }
 
 .currentword > span[data-status="celebrate"] {
@@ -65,4 +73,38 @@ code {
 
 .currentword > span[data-status="current"] {
   color: red;
+  animation-name: letter_current;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+  animation-easing-function: cubic-bezier(0.28, 0.84, 0.42, 1);
+}
+
+@keyframes letter_current {
+  from {
+    transform: scale(1) translateY(0);
+  }
+  30% {
+    transform: scale(1.1, 0.9) translateY(-0.5rem);
+  }
+  60% {
+    transform: scale(0.9, 1) translateY(0.2rem);
+  }
+  to {
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes word_celebrate {
+  from {
+    transform: rotate(0);
+  }
+  33% {
+    transform: rotate(10deg);
+  }
+  66% {
+    transform: rotate(-10deg);
+  }
+  to {
+    transform: rotate(0);
+  }
 }
