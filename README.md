@@ -1,5 +1,5 @@
 <div style="text-align: center; transform: scale(.5);">
-  <img src="https://github.com/steveruizok/kdtype/raw/main/card-repo.png"/>
+  <img src="https://github.com/steveruizok/kdtype/raw/main/card_repo.png"/>
 </div>
 
 # kdtype
