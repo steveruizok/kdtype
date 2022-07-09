@@ -1,5 +1,4 @@
-import "./App.css"
-import { CurrentWord } from "~components/CurrentWord"
+import { GameScreen } from "~components/GameScreen"
 import { gameContext, useGameContextHelper } from "~hooks/useGameContext"
 
 function App() {
@@ -8,7 +7,7 @@ function App() {
   return (
     <gameContext.Provider value={game}>
       <div className="App">
-        <CurrentWord />
+        <GameScreen />
       </div>
     </gameContext.Provider>
   )
