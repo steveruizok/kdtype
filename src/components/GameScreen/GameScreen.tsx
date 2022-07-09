@@ -7,15 +7,23 @@ import Confetti from "react-confetti"
 export const GameScreen = observer(function GameScreen() {
   const { game } = useGame()
 
+  const [start, setStart] = React.useState(false)
+
   React.useEffect(() => {
+    const handleFirstStart = () => {
+      setStart(true)
+    }
+
     const handleKeyDown = (e: KeyboardEvent) => {
       game.dispatch({ type: "input", key: e.key.toLowerCase() })
     }
 
     window.addEventListener("keydown", handleKeyDown)
+    game.once("word_complete", handleFirstStart)
 
     return () => {
       window.removeEventListener("keydown", handleKeyDown)
+      game.off("word_complete", handleFirstStart)
     }
   }, [game])
 
@@ -51,6 +59,7 @@ export const GameScreen = observer(function GameScreen() {
         width={width}
         height={height}
         recycle={game.state === "word_complete"}
+        run={start}
       />
     </div>
   )
