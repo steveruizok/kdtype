@@ -17,6 +17,7 @@ export type GameEvents = {
 
 export type UiEvent =
   | { type: "input"; key: string }
+  | { type: "click" }
   | { type: "game_start" }
   | { type: "game_reset" }
 
@@ -74,6 +75,15 @@ export class Game extends EventEmitter<GameEvents> {
     switch (event.type) {
       case "game_reset": {
         this.resetGame()
+        break
+      }
+      case "click": {
+        switch (this.state) {
+          case "word_complete": {
+            this.startWord()
+            break
+          }
+        }
         break
       }
       case "input": {

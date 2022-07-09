@@ -22,16 +22,24 @@ export const GameScreen = observer(function GameScreen() {
   const { width, height } = useWindowSize()
 
   return (
-    <div className="screen">
+    <div
+      className="screen"
+      onPointerDown={() => {
+        game.dispatch({ type: "click" })
+      }}
+    >
       <div className="currentword">
+        <input className="input" autoFocus />
         {game.currentWord.split("").map((letter, i) => (
           <span
             key={i}
             data-status={
-              i === game.currentIndex
+              game.state === "word_complete"
+                ? "celebrate"
+                : i === game.currentIndex
                 ? "current"
                 : i < game.currentIndex
-                ? "complete"
+                ? "celebrate"
                 : false
             }
           >
@@ -39,9 +47,11 @@ export const GameScreen = observer(function GameScreen() {
           </span>
         ))}
       </div>
-      {game.state === "word_complete" && (
-        <Confetti width={width} height={height} />
-      )}
+      <Confetti
+        width={width}
+        height={height}
+        recycle={game.state === "word_complete"}
+      />
     </div>
   )
 })
