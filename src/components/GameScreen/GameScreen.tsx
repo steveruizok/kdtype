@@ -36,7 +36,10 @@ export const GameScreen = observer(function GameScreen() {
         game.dispatch({ type: "click" })
       }}
     >
-      <div className="currentword">
+      <div
+        className="currentword"
+        data-status={game.state === "word_complete" ? "celebrate" : false}
+      >
         <input className="input" autoFocus />
         {game.currentWord.split("").map((letter, i) => (
           <span
