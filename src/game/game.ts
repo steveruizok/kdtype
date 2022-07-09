@@ -2,6 +2,8 @@ import { EventEmitter } from "eventemitter3"
 import { action, computed, makeObservable, observable } from "mobx"
 import { THREE_LETTER_WORDS } from "./constants"
 import { sampleAndRemove } from "./utils"
+import inputAudio from "/audio/input_right.mp3"
+import celebrateAudio from "/audio/word_complete.mp3"
 
 export type GameState = "word_spelling" | "word_complete"
 
@@ -21,6 +23,8 @@ export type UiEvent =
   | { type: "game_start" }
   | { type: "game_reset" }
 
+export type GameAudio = "input_right" | "word_complete"
+
 export class Game extends EventEmitter<GameEvents> {
   constructor() {
     super()
@@ -39,6 +43,13 @@ export class Game extends EventEmitter<GameEvents> {
    */
   words = [...THREE_LETTER_WORDS]
 
+  /**
+   * The games audio effects.
+   */
+  audio = {
+    input_right: new Audio(inputAudio),
+    word_complete: new Audio(celebrateAudio)
+  }
   /**
    * The current word.
    */
@@ -119,6 +130,7 @@ export class Game extends EventEmitter<GameEvents> {
     // Did the user just press the right key?
     if (key.toLowerCase() === this.nextLetter) {
       this.currentIndex++
+      this.playAudio("input_right")
       this.emit("input_right", this)
     } else {
       this.emit("input_wrong", this)
@@ -126,6 +138,7 @@ export class Game extends EventEmitter<GameEvents> {
 
     // Did the user just complete the word?
     if (this.currentIndex > this.currentWord.length - 1) {
+      this.playAudio("word_complete")
       this.completeWord()
     }
   }
@@ -141,6 +154,11 @@ export class Game extends EventEmitter<GameEvents> {
     this.currentWord = sampleAndRemove(this.words)
     this.emit("game_reset", this)
     this.setState("word_spelling")
+  }
+  
+  @action playAudio(key: GameAudio) {
+    this.audio[key].load()
+    this.audio[key].play()
   }
 }
 
