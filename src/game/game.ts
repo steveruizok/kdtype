@@ -117,7 +117,6 @@ export class Game extends EventEmitter<GameEvents> {
   }
 
   @action handleInput(key: string) {
-    console.log()
     sound.play(key.toLowerCase())
     // Did the user just press the right key?
     if (key.toLowerCase() === this.nextLetter) {
