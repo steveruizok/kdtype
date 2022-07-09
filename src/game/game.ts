@@ -2,6 +2,7 @@ import { EventEmitter } from "eventemitter3"
 import { action, computed, makeObservable, observable } from "mobx"
 import { THREE_LETTER_WORDS } from "./constants"
 import { sampleAndRemove } from "./utils"
+import { sound } from './sounds'
 
 export type GameState = "word_spelling" | "word_complete"
 
@@ -116,6 +117,8 @@ export class Game extends EventEmitter<GameEvents> {
   }
 
   @action handleInput(key: string) {
+    console.log()
+    sound.play(key.toLowerCase())
     // Did the user just press the right key?
     if (key.toLowerCase() === this.nextLetter) {
       this.currentIndex++

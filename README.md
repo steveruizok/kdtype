@@ -24,6 +24,8 @@ Contributions are welcome! Visit the [GitHub repository](https://github.com/stev
 
 MIT
 
+This project uses `Alphabet.oga` from [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Alphabet.oga) under the [Attribution-Share Alike 3.0 Unported](https://creativecommons.org/licenses/by-sa/3.0/deed.en) license.
+
 ## Author
 
 - [@steveruizok](https://twitter.com/steveruizok)
