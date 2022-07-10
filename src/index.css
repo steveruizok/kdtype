@@ -30,7 +30,6 @@ body {
   font-size: 160px;
   font-weight: bold;
   text-transform: lowercase;
-  padding-bottom: 25%;
   transform-origin: center center;
   opacity: 0;
   color: black;
@@ -91,6 +90,10 @@ body {
   animation-timing-function: cubic-bezier(0.28, 0.84, 0.42, 1);
 }
 
+.uppercase .currentword {
+  text-transform: uppercase;
+}
+
 @keyframes letter_current {
   from {
     transform: scale(1) translateY(0);
@@ -119,4 +122,69 @@ body {
   to {
     transform: rotate(0);
   }
+}
+
+.settings-container {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  z-index: 10;
+}
+.settings-container h3 {
+  margin-block-end: 4px;
+  color: rgb(0 0 0 / 85%);
+}
+
+.settings-container h4 {
+  margin-block-start: 0px;
+  margin-block-end: 16px;
+  font-weight: 400;
+  color: rgb(0 0 0 / 65%);
+}
+
+.settings-content {
+  padding: 16px;
+}
+
+.casing-setting {
+  display: flex;
+  inline-size: 110px;
+  margin-block-end: 4px;
+  cursor: pointer;
+}
+
+.casing-setting * {
+  cursor: pointer;
+}
+
+.casing-setting label {
+  inline-size: 100%;
+}
+
+.settings-button {
+  border: none;
+  display: grid;
+  padding: 8px;
+  border-radius: 4px;
+  align-items: center;
+  transition: all 0.1s ease-out;
+  background-color: transparent;
+}
+
+.settings-button:hover {
+  background-color: rgba(0 0 0 / 10%);
+  cursor: pointer;
+}
+
+.settings-button svg {
+  stroke: rgb(0 0 0 / 40%);
+  inline-size: 20px;
+  block-size: 20px;
+  transition: all 0.1s ease-out;
+}
+
+.settings-button:hover svg {
+  stroke: rgb(0 0 0 / 70%);
 }
