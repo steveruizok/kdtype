@@ -1,7 +1,7 @@
 import { EventEmitter } from 'eventemitter3'
 import { action, computed, makeObservable, observable } from 'mobx'
-import { THREE_LETTER_WORDS } from './constants'
-import { sampleAndRemove } from './utils'
+import { ALL_WORDS } from './constants'
+import { isNotProfane, sampleAndRemove } from './utils'
 
 export type GameState = 'word_spelling' | 'word_complete'
 
@@ -37,12 +37,12 @@ export class Game extends EventEmitter<GameEvents> {
   /**
    * The array of words.
    */
-  words = [...THREE_LETTER_WORDS]
+  words = this.getWords()
 
   /**
    * The current word.
    */
-  @observable currentWord = sampleAndRemove(this.words)
+  @observable currentWord = this.getNextWord()
 
   /**
    * The current letter index.
@@ -115,7 +115,7 @@ export class Game extends EventEmitter<GameEvents> {
     }
 
     this.currentIndex = 0
-    this.currentWord = sampleAndRemove(this.words)
+    this.currentWord = this.getNextWord()
     this.emit('word_start', this)
     this.setState('word_spelling')
   }
@@ -142,11 +142,19 @@ export class Game extends EventEmitter<GameEvents> {
   }
 
   @action resetGame() {
-    this.words = [...THREE_LETTER_WORDS]
+    this.words = this.getWords()
     this.currentIndex = 0
-    this.currentWord = sampleAndRemove(this.words)
+    this.currentWord = this.getNextWord()
     this.emit('game_reset', this)
     this.setState('word_spelling')
+  }
+
+  @action getWords(maxLength = 3) {
+    return ALL_WORDS.filter((word) => word.length <= maxLength).filter(isNotProfane)
+  }
+
+  @action getNextWord() {
+    return sampleAndRemove(this.words)
   }
 }
 

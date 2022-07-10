@@ -8,11 +8,19 @@ import 'animate.css'
 export const GameScreen = observer(function GameScreen() {
   const { game } = useGame()
 
+  const rInput = React.useRef<HTMLInputElement>(null)
+
   const [start, setStart] = React.useState(false)
 
   React.useEffect(() => {
     const handleFirstStart = () => {
       setStart(true)
+    }
+
+    const handleNewWord = () => {
+      const elm = rInput.current
+      if (!elm) return
+      elm.value = ''
     }
 
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -21,10 +29,12 @@ export const GameScreen = observer(function GameScreen() {
 
     window.addEventListener('keydown', handleKeyDown)
     game.once('word_complete', handleFirstStart)
+    game.on('word_start', handleNewWord)
 
     return () => {
       window.removeEventListener('keydown', handleKeyDown)
       game.off('word_complete', handleFirstStart)
+      game.off('word_start', handleNewWord)
     }
   }, [game])
 
@@ -42,7 +52,7 @@ export const GameScreen = observer(function GameScreen() {
           game.state == 'word_complete' ? 'currentword celebration_animation' : 'currentword'
         }
       >
-        <input className="input" autoFocus />
+        <input ref={rInput} className="input" autoFocus />
         {game.currentWord.split('').map((letter, i) => (
           <span
             key={i}
