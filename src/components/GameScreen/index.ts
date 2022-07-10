@@ -1,1 +1,1 @@
-export * from "./GameScreen"
+export * from './GameScreen'
