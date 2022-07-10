@@ -61,3 +61,8 @@ body {
 .currentword > span[data-status='current'] {
   color: red;
 }
+
+.celebration_animation {
+  animation: tada;
+  animation-duration: 0.5s;
+}
