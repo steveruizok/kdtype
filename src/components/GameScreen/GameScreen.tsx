@@ -1,12 +1,15 @@
 import * as React from 'react'
+import { useState } from 'react'
 import { observer } from 'mobx-react-lite'
 import { useGame } from '~hooks/useGameContext'
 import { useSoundEffects } from '~hooks/useSoundEffects'
 import { Celebration } from '~components/Celebration'
 import { CurrentWord } from '~components/CurrentWord'
+import { Settings } from '~components/Settings'
 
 export const GameScreen = observer(function GameScreen() {
   const { game } = useGame()
+  const [casingSetting, setCasingSetting] = useState<string>('lowercase')
 
   useSoundEffects()
 
@@ -24,7 +27,12 @@ export const GameScreen = observer(function GameScreen() {
   }, [game.state])
 
   return (
-    <div className="game" data-state={game.state} onPointerDown={handlePointerDown}>
+    <div
+      className={`game ${casingSetting}`}
+      data-state={game.state}
+      onPointerDown={handlePointerDown}
+    >
+      <Settings casingSetting={casingSetting} setCasingSetting={setCasingSetting} />
       <CurrentWord />
       <Celebration />
     </div>
