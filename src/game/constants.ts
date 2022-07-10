@@ -18,7 +18,7 @@ export const ALL_WORDS = [
   ...FOUR_LETTER_WORDS,
   ...FIVE_LETTER_WORDS,
   ...SIX_LETTER_WORDS,
-]
+].map((word) => word.toLowerCase())
 
 /**
  * A mapping of game events to Audio elements used to play sound effects.
