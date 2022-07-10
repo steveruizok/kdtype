@@ -32,7 +32,7 @@ export const GameScreen = observer(function GameScreen() {
       data-state={game.state}
       onPointerDown={handlePointerDown}
     >
-      <Settings setCasingSetting={setCasingSetting} />
+      <Settings casingSetting={casingSetting} setCasingSetting={setCasingSetting} />
       <CurrentWord />
       <Celebration />
     </div>

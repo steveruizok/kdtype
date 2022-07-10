@@ -1,10 +1,11 @@
 import { useState } from 'react'
 
 type Props = {
+  casingSetting: string
   setCasingSetting: (value: string) => void
 }
 
-export const Settings = ({ setCasingSetting }: Props) => {
+export const Settings = ({ casingSetting, setCasingSetting }: Props) => {
   const [settingsActive, setSettingsActive] = useState<boolean>(false)
 
   const renderSettingsButton = () => {
@@ -36,11 +37,22 @@ export const Settings = ({ setCasingSetting }: Props) => {
         <h4>Lower or uppercase?</h4>
         <div className="casing-setting" onChange={() => setCasingSetting('lowercase')}>
           <label htmlFor="lowercase">Lowercase</label>
-          <input id="lowercase" type="radio" defaultChecked name="casing-setting" />
+          <input
+            id="lowercase"
+            type="radio"
+            defaultChecked
+            name="casing-setting"
+            checked={casingSetting === 'lowercase'}
+          />
         </div>
         <div className="casing-setting" onChange={() => setCasingSetting('uppercase')}>
           <label htmlFor="uppercase">Uppercase</label>
-          <input id="uppercase" type="radio" name="casing-setting" />
+          <input
+            id="uppercase"
+            type="radio"
+            name="casing-setting"
+            checked={casingSetting === 'uppercase'}
+          />
         </div>
       </div>
     )
