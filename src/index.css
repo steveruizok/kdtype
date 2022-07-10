@@ -60,6 +60,14 @@ body {
   animation-timing-function: ease-in-out;
 }
 
+.game[data-state='word_transitioning_out'] .currentword {
+  color: rgb(38, 145, 252);
+  opacity: 0;
+  animation-name: word_complete;
+  animation-duration: 1s;
+  animation-timing-function: ease-in-out;
+}
+
 .input {
   opacity: 0;
   position: absolute;
