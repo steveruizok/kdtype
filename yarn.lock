@@ -294,6 +294,11 @@
     estree-walker "^2.0.1"
     picomatch "^2.2.2"
 
+"@types/bad-words@^3.0.1":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@types/bad-words/-/bad-words-3.0.1.tgz#6a20fb08814af5e1f2428fa9e0098ca7b36f730a"
+  integrity sha512-7la3ZDJG1tlRqySO+pnXycZpacaMEw/iLEm8kc4l+I+jN8KjBfoQVwO6jm98xzXVLrxV8vDrB5TaMoop8sKclQ==
+
 "@types/js-cookie@^2.2.6":
   version "2.2.7"
   resolved "https://registry.yarnpkg.com/@types/js-cookie/-/js-cookie-2.2.7.tgz#226a9e31680835a6188e887f3988e60c04d3f6a3"
