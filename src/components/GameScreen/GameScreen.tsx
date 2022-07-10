@@ -3,6 +3,7 @@ import { observer } from 'mobx-react-lite'
 import { useGame } from '~hooks/useGameContext'
 import { useWindowSize } from 'react-use'
 import Confetti from 'react-confetti'
+import 'animate.css'
 
 export const GameScreen = observer(function GameScreen() {
   const { game } = useGame()
@@ -36,7 +37,11 @@ export const GameScreen = observer(function GameScreen() {
         game.dispatch({ type: 'click' })
       }}
     >
-      <div className="currentword">
+      <div
+        className={
+          game.state == 'word_complete' ? 'currentword celebration_animation' : 'currentword'
+        }
+      >
         <input className="input" autoFocus />
         {game.currentWord.split('').map((letter, i) => (
           <span
