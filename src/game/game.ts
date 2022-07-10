@@ -50,6 +50,11 @@ export class Game extends EventEmitter<GameEvents> {
   @observable currentIndex = 0
 
   /**
+   * The current streak of correct words typed.
+   */
+  @observable currentStreak = 0
+
+  /**
    * The next letter.
    */
   @computed get nextLetter() {
@@ -133,6 +138,7 @@ export class Game extends EventEmitter<GameEvents> {
   @action completeWord() {
     this.emit('word_complete', this)
     this.setState('word_complete')
+    this.currentStreak++
   }
 
   @action resetGame() {

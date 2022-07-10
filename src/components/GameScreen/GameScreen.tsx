@@ -55,6 +55,7 @@ export const GameScreen = observer(function GameScreen() {
           </span>
         ))}
       </div>
+      <div>Streak: {game.currentStreak}</div>
       <Confetti
         width={width}
         height={height}
