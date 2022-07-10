@@ -1,4 +1,4 @@
-import BadWords from "./words/bad-words.json"
+import BadWords from './words/bad-words.json'
 
 const badWords = new Set(BadWords)
 
