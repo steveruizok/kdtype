@@ -17,7 +17,7 @@ body {
   overflow: hidden;
 }
 
-.screen {
+.game {
   height: 100%;
   width: 100%;
   display: flex;
@@ -27,10 +27,38 @@ body {
 }
 
 .currentword {
-  font-size: 80px;
+  font-size: 160px;
   font-weight: bold;
   text-transform: lowercase;
   padding-bottom: 25%;
+  transform-origin: center center;
+  opacity: 0;
+  color: black;
+  transition: all 0.5s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+.game[data-state='game_starting'] .currentword {
+  opacity: 0;
+}
+
+.game[data-state='word_transitioning_out'] .currentword {
+  opacity: 0;
+}
+
+.game[data-state='word_transitioning_in'] .currentword {
+  opacity: 1;
+}
+
+.game[data-state='word_spelling'] .currentword {
+  opacity: 1;
+}
+
+.game[data-state='word_complete'] .currentword {
+  color: rgb(38, 145, 252);
+  opacity: 1;
+  animation-name: word_complete;
+  animation-duration: 1s;
+  animation-timing-function: ease-in-out;
 }
 
 .input {
@@ -47,11 +75,7 @@ body {
 
 .currentword > span {
   margin: 2px;
-  color: black;
-}
-
-.currentword > span[data-status='celebrate'] {
-  color: rgb(38, 145, 252);
+  display: inline-block;
 }
 
 .currentword > span[data-status='complete'] {
@@ -60,4 +84,39 @@ body {
 
 .currentword > span[data-status='current'] {
   color: red;
+  animation-name: letter_current;
+  animation-duration: 1s;
+  animation-delay: 0.25s;
+  animation-iteration-count: infinite;
+  animation-timing-function: cubic-bezier(0.28, 0.84, 0.42, 1);
+}
+
+@keyframes letter_current {
+  from {
+    transform: scale(1) translateY(0);
+  }
+  30% {
+    transform: scale(1.05, 0.9) translateY(-0.4rem);
+  }
+  60% {
+    transform: scale(0.95, 1) translateY(0.1rem);
+  }
+  to {
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes word_complete {
+  from {
+    transform: rotate(0);
+  }
+  33% {
+    transform: rotate(10deg);
+  }
+  66% {
+    transform: rotate(-10deg);
+  }
+  to {
+    transform: rotate(0);
+  }
 }
