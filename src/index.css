@@ -17,7 +17,7 @@ body {
   overflow: hidden;
 }
 
-.screen {
+.game {
   height: 100%;
   width: 100%;
   display: flex;
@@ -29,13 +29,34 @@ body {
 .currentword {
   font-size: 160px;
   font-weight: bold;
-  text-transform: uppercase;
+  text-transform: lowercase;
   padding-bottom: 25%;
-  transform-origin: center 10%;
+  transform-origin: center center;
+  opacity: 0;
+  color: black;
+  transition: all 0.5s cubic-bezier(0.215, 0.61, 0.355, 1);
 }
 
-.currentword[data-status='celebrate'] {
-  animation-name: word_celebrate;
+.game[data-state='game_starting'] .currentword {
+  opacity: 0;
+}
+
+.game[data-state='word_transitioning_out'] .currentword {
+  opacity: 0;
+}
+
+.game[data-state='word_transitioning_in'] .currentword {
+  opacity: 1;
+}
+
+.game[data-state='word_spelling'] .currentword {
+  opacity: 1;
+}
+
+.game[data-state='word_complete'] .currentword {
+  color: rgb(38, 145, 252);
+  opacity: 1;
+  animation-name: word_complete;
   animation-duration: 1s;
   animation-timing-function: ease-in-out;
 }
@@ -54,12 +75,7 @@ body {
 
 .currentword > span {
   margin: 2px;
-  color: black;
   display: inline-block;
-}
-
-.currentword > span[data-status='celebrate'] {
-  color: rgb(38, 145, 252);
 }
 
 .currentword > span[data-status='complete'] {
@@ -90,7 +106,7 @@ body {
   }
 }
 
-@keyframes word_celebrate {
+@keyframes word_complete {
   from {
     transform: rotate(0);
   }

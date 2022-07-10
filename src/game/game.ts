@@ -1,41 +1,33 @@
 import { EventEmitter } from 'eventemitter3'
 import { action, computed, makeObservable, observable } from 'mobx'
-import { ALL_WORDS } from './constants'
+import { ALL_WORDS, GAME_EVENTS } from './constants'
 import { isNotProfane, sampleAndRemove } from './utils'
 
-export type GameState = 'word_spelling' | 'word_complete'
-
-export type GameEvent =
-  | 'game_start'
-  | 'game_reset'
-  | 'state_change'
-  | 'input_wrong'
-  | 'input_right'
-  | 'word_start'
+export type GameState =
+  | 'game_starting'
+  | 'word_transitioning_out'
+  | 'word_transitioning_in'
+  | 'word_spelling'
   | 'word_complete'
 
-export type GameEvents = { [K in GameEvent]: (event: K, game: Game) => void }
+export type GameEvent = typeof GAME_EVENTS[number]
+
+export type GameEvents = { [K in GameEvent]: (game: Game) => void }
 
 export type UiEvent =
   | { type: 'input'; key: string }
   | { type: 'click' }
   | { type: 'game_start' }
   | { type: 'game_reset' }
-
-export type GameAudio = 'input_right' | 'word_complete'
+  | { type: 'animation_complete' }
 
 export class Game extends EventEmitter<GameEvents> {
   constructor() {
     super()
     makeObservable(this)
 
-    this.emit('game_start', 'game_start', this)
+    requestAnimationFrame(() => this.emit('game_start', this))
   }
-
-  /**
-   * The current game state.
-   */
-  state: GameState = 'word_spelling'
 
   /**
    * The array of words.
@@ -60,13 +52,18 @@ export class Game extends EventEmitter<GameEvents> {
   }
 
   /**
+   * The current game state.
+   */
+  @observable state: GameState = 'game_starting'
+
+  /**
    * Set a new state.
    *
    * @param state The game state to set.
    */
   @action setState(state: GameState) {
     this.state = state
-    this.emit('state_change', 'state_change', this)
+    this.emit('state_change', this)
   }
 
   /**
@@ -83,7 +80,20 @@ export class Game extends EventEmitter<GameEvents> {
       case 'click': {
         switch (this.state) {
           case 'word_complete': {
-            this.startWord()
+            this.unloadCurrentWord()
+            break
+          }
+        }
+        break
+      }
+      case 'animation_complete': {
+        switch (this.state) {
+          case 'word_transitioning_out': {
+            this.loadNextWord()
+            break
+          }
+          case 'word_transitioning_in': {
+            this.setState('word_spelling')
             break
           }
         }
@@ -92,11 +102,11 @@ export class Game extends EventEmitter<GameEvents> {
       case 'input': {
         switch (this.state) {
           case 'word_complete': {
-            this.startWord()
+            this.unloadCurrentWord()
             break
           }
           case 'word_spelling': {
-            this.handleInput(event.key)
+            this.handleLetterInput(event.key)
             break
           }
         }
@@ -105,7 +115,13 @@ export class Game extends EventEmitter<GameEvents> {
     }
   }
 
-  @action startWord() {
+  @action unloadCurrentWord() {
+    // Enter the word_starting state
+    this.setState('word_transitioning_out')
+  }
+
+  @action loadNextWord() {
+    // Enter the word_starting state
     if (this.words.length === 0) {
       // If we've somehow ran out of words, reset the game instead
       this.resetGame()
@@ -114,17 +130,18 @@ export class Game extends EventEmitter<GameEvents> {
 
     this.currentIndex = 0
     this.currentWord = this.getNextWord()
-    this.emit('word_start', 'word_start', this)
+    this.emit('word_start', this)
     this.setState('word_spelling')
+    this.setState('word_transitioning_in')
   }
 
-  @action handleInput(key: string) {
+  @action handleLetterInput(key: string) {
     // Did the user just press the right key?
     if (key.toLowerCase() === this.nextLetter) {
       this.currentIndex++
-      this.emit('input_right', 'input_right', this)
+      this.emit('input_right', this)
     } else {
-      this.emit('input_wrong', 'input_wrong', this)
+      this.emit('input_wrong', this)
     }
 
     // Did the user just complete the word?
@@ -134,7 +151,7 @@ export class Game extends EventEmitter<GameEvents> {
   }
 
   @action completeWord() {
-    this.emit('word_complete', 'word_complete', this)
+    this.emit('word_complete', this)
     this.setState('word_complete')
   }
 
@@ -142,7 +159,7 @@ export class Game extends EventEmitter<GameEvents> {
     this.words = this.getWords()
     this.currentIndex = 0
     this.currentWord = this.getNextWord()
-    this.emit('game_reset', 'game_reset', this)
+    this.emit('game_reset', this)
     this.setState('word_spelling')
   }
 

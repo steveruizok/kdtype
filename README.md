@@ -16,6 +16,8 @@ yarn
 yarn dev
 ```
 
+See [the diagram](https://github.com/steveruizok/kdtype/raw/main/game/src/diagram.tldr).
+
 ## Contribution
 
 Contributions are welcome! Visit the [GitHub repository](https://github.com/steveruizok/kdtype) to submit issues or pull requests.
