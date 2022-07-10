@@ -24,7 +24,12 @@ export const ALL_WORDS = [
  * A mapping of game events to Audio elements used to play sound effects.
  * To create a new sound effect, create a new file in public/audio.
  */
-export const EVENT_SOUNDS: Partial<Record<typeof GAME_EVENTS[number], HTMLAudioElement>> =
-  Object.fromEntries(
-    GAME_EVENTS.map((eventName) => [eventName, new Audio(`audio/${eventName}.mp3`)])
-  )
+export const EVENT_SOUNDS: Record<typeof GAME_EVENTS[number], HTMLAudioElement | null> = {
+  game_start: null,
+  game_reset: null,
+  state_change: null,
+  input_wrong: null,
+  input_right: new Audio(`audio/input_right.mp3`),
+  word_start: null,
+  word_complete: new Audio(`audio/word_complete.mp3`),
+}
