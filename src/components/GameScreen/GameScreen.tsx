@@ -1,8 +1,8 @@
-import * as React from "react"
-import { observer } from "mobx-react-lite"
-import { useGame } from "~hooks/useGameContext"
-import { useWindowSize } from "react-use"
-import Confetti from "react-confetti"
+import * as React from 'react'
+import { observer } from 'mobx-react-lite'
+import { useGame } from '~hooks/useGameContext'
+import { useWindowSize } from 'react-use'
+import Confetti from 'react-confetti'
 
 export const GameScreen = observer(function GameScreen() {
   const { game } = useGame()
@@ -19,21 +19,21 @@ export const GameScreen = observer(function GameScreen() {
     const handleNewWord = () => {
       const elm = rInput.current
       if (!elm) return
-      elm.value = ""
+      elm.value = ''
     }
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      game.dispatch({ type: "input", key: e.key.toLowerCase() })
+      game.dispatch({ type: 'input', key: e.key.toLowerCase() })
     }
 
-    window.addEventListener("keydown", handleKeyDown)
-    game.once("word_complete", handleFirstStart)
-    game.on("word_start", handleNewWord)
+    window.addEventListener('keydown', handleKeyDown)
+    game.once('word_complete', handleFirstStart)
+    game.on('word_start', handleNewWord)
 
     return () => {
-      window.removeEventListener("keydown", handleKeyDown)
-      game.off("word_complete", handleFirstStart)
-      game.off("word_start", handleNewWord)
+      window.removeEventListener('keydown', handleKeyDown)
+      game.off('word_complete', handleFirstStart)
+      game.off('word_start', handleNewWord)
     }
   }, [game])
 
@@ -43,21 +43,21 @@ export const GameScreen = observer(function GameScreen() {
     <div
       className="screen"
       onPointerDown={() => {
-        game.dispatch({ type: "click" })
+        game.dispatch({ type: 'click' })
       }}
     >
       <div className="currentword">
         <input ref={rInput} className="input" autoFocus />
-        {game.currentWord.split("").map((letter, i) => (
+        {game.currentWord.split('').map((letter, i) => (
           <span
             key={i}
             data-status={
-              game.state === "word_complete"
-                ? "celebrate"
+              game.state === 'word_complete'
+                ? 'celebrate'
                 : i === game.currentIndex
-                ? "current"
+                ? 'current'
                 : i < game.currentIndex
-                ? "celebrate"
+                ? 'celebrate'
                 : false
             }
           >
@@ -68,7 +68,7 @@ export const GameScreen = observer(function GameScreen() {
       <Confetti
         width={width}
         height={height}
-        recycle={game.state === "word_complete"}
+        recycle={game.state === 'word_complete'}
         run={start}
       />
     </div>
