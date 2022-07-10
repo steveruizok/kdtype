@@ -66,3 +66,9 @@ body {
   animation: tada;
   animation-duration: 0.5s;
 }
+
+.streak_animation {
+  animation: flash;
+  animation-duration: 0.5s;
+  font-size: 3rem;
+}

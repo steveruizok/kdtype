@@ -60,7 +60,9 @@ export const GameScreen = observer(function GameScreen() {
           </span>
         ))}
       </div>
-      <div>Streak: {game.currentStreak}</div>
+      <div className={game.state == 'word_complete' ? 'streak_animation' : ''}>
+        Streak: {game.currentStreak}
+      </div>
       <Confetti
         width={width}
         height={height}
