@@ -16,7 +16,7 @@ yarn
 yarn dev
 ```
 
-See [the diagram](https://github.com/steveruizok/kdtype/raw/main/game/src/diagram.tldr).
+See [the diagram](https://github.com/steveruizok/kdtype/raw/main/src/game/diagram.tldr).
 
 ## Contribution
 
