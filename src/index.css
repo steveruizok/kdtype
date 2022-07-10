@@ -1,14 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Itim&display=swap');
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
-    'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  font-family: 'Itim', -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow: hidden;
-}
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
 .App {
@@ -30,7 +27,7 @@ code {
 }
 
 .currentword {
-  font-size: 64px;
+  font-size: 80px;
   font-weight: bold;
   text-transform: lowercase;
   padding-bottom: 25%;
