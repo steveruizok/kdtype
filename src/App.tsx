@@ -1,5 +1,5 @@
-import { GameScreen } from "~components/GameScreen"
-import { gameContext, useGameContextHelper } from "~hooks/useGameContext"
+import { GameScreen } from '~components/GameScreen'
+import { gameContext, useGameContextHelper } from '~hooks/useGameContext'
 
 function App() {
   const game = useGameContextHelper()

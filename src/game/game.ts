@@ -1,11 +1,11 @@
-import { EventEmitter } from "eventemitter3"
-import { action, computed, makeObservable, observable } from "mobx"
-import { THREE_LETTER_WORDS } from "./constants"
-import { sampleAndRemove } from "./utils"
-import inputAudio from "/audio/input_right.mp3"
-import celebrateAudio from "/audio/word_complete.mp3"
+import { EventEmitter } from 'eventemitter3'
+import { action, computed, makeObservable, observable } from 'mobx'
+import { THREE_LETTER_WORDS } from './constants'
+import { sampleAndRemove } from './utils'
+import inputAudio from '/audio/input_right.mp3'
+import celebrateAudio from '/audio/word_complete.mp3'
 
-export type GameState = "word_spelling" | "word_complete"
+export type GameState = 'word_spelling' | 'word_complete'
 
 export type GameEvents = {
   game_start: (game: Game) => void
@@ -18,25 +18,25 @@ export type GameEvents = {
 }
 
 export type UiEvent =
-  | { type: "input"; key: string }
-  | { type: "click" }
-  | { type: "game_start" }
-  | { type: "game_reset" }
+  | { type: 'input'; key: string }
+  | { type: 'click' }
+  | { type: 'game_start' }
+  | { type: 'game_reset' }
 
-export type GameAudio = "input_right" | "word_complete"
+export type GameAudio = 'input_right' | 'word_complete'
 
 export class Game extends EventEmitter<GameEvents> {
   constructor() {
     super()
     makeObservable(this)
 
-    this.emit("game_start", this)
+    this.emit('game_start', this)
   }
 
   /**
    * The current game state.
    */
-  state: GameState = "word_spelling"
+  state: GameState = 'word_spelling'
 
   /**
    * The array of words.
@@ -48,7 +48,7 @@ export class Game extends EventEmitter<GameEvents> {
    */
   audio = {
     input_right: new Audio(inputAudio),
-    word_complete: new Audio(celebrateAudio)
+    word_complete: new Audio(celebrateAudio),
   }
   /**
    * The current word.
@@ -74,7 +74,7 @@ export class Game extends EventEmitter<GameEvents> {
    */
   @action setState(state: GameState) {
     this.state = state
-    this.emit("state_change", this)
+    this.emit('state_change', this)
   }
 
   /**
@@ -84,26 +84,26 @@ export class Game extends EventEmitter<GameEvents> {
    */
   @action dispatch(event: UiEvent) {
     switch (event.type) {
-      case "game_reset": {
+      case 'game_reset': {
         this.resetGame()
         break
       }
-      case "click": {
+      case 'click': {
         switch (this.state) {
-          case "word_complete": {
+          case 'word_complete': {
             this.startWord()
             break
           }
         }
         break
       }
-      case "input": {
+      case 'input': {
         switch (this.state) {
-          case "word_complete": {
+          case 'word_complete': {
             this.startWord()
             break
           }
-          case "word_spelling": {
+          case 'word_spelling': {
             this.handleInput(event.key)
             break
           }
@@ -122,40 +122,40 @@ export class Game extends EventEmitter<GameEvents> {
 
     this.currentIndex = 0
     this.currentWord = sampleAndRemove(this.words)
-    this.emit("word_start", this)
-    this.setState("word_spelling")
+    this.emit('word_start', this)
+    this.setState('word_spelling')
   }
 
   @action handleInput(key: string) {
     // Did the user just press the right key?
     if (key.toLowerCase() === this.nextLetter) {
       this.currentIndex++
-      this.playAudio("input_right")
-      this.emit("input_right", this)
+      this.playAudio('input_right')
+      this.emit('input_right', this)
     } else {
-      this.emit("input_wrong", this)
+      this.emit('input_wrong', this)
     }
 
     // Did the user just complete the word?
     if (this.currentIndex > this.currentWord.length - 1) {
-      this.playAudio("word_complete")
+      this.playAudio('word_complete')
       this.completeWord()
     }
   }
 
   @action completeWord() {
-    this.emit("word_complete", this)
-    this.setState("word_complete")
+    this.emit('word_complete', this)
+    this.setState('word_complete')
   }
 
   @action resetGame() {
     this.words = [...THREE_LETTER_WORDS]
     this.currentIndex = 0
     this.currentWord = sampleAndRemove(this.words)
-    this.emit("game_reset", this)
-    this.setState("word_spelling")
+    this.emit('game_reset', this)
+    this.setState('word_spelling')
   }
-  
+
   @action playAudio(key: GameAudio) {
     this.audio[key].load()
     this.audio[key].play()

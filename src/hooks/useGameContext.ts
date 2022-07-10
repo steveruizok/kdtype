@@ -1,5 +1,5 @@
-import React from "react"
-import { Game } from "~game"
+import React from 'react'
+import { Game } from '~game'
 
 export type GameContext = {
   game: Game
