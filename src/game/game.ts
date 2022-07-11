@@ -14,67 +14,85 @@ export type GameEvent = typeof GAME_EVENTS[number]
 
 export type GameEvents = { [K in GameEvent]: (game: Game) => void }
 
+export type GameSettings = {
+  casing: 'lower' | 'upper' | 'start'
+  ignoreCasing: boolean
+}
+
 export type UiEvent =
+  | { type: 'ui_ready' }
   | { type: 'input'; key: string }
   | { type: 'click' }
-  | { type: 'game_start' }
-  | { type: 'game_reset' }
   | { type: 'animation_complete' }
+  | { type: 'change_setting'; setting: Partial<GameSettings> }
 
 export class Game extends EventEmitter<GameEvents> {
   constructor() {
     super()
     makeObservable(this)
 
-    requestAnimationFrame(() => this.emit('game_start', this))
-  }
-
-  /**
-   * The array of words.
-   */
-  words = this.getWords()
-
-  /**
-   * The current word.
-   */
-  @observable currentWord = this.getNextWord()
-
-  /**
-   * The current letter index.
-   */
-  @observable currentIndex = 0
-
-  /**
-   * The next letter.
-   */
-  @computed get nextLetter() {
-    return this.currentWord[this.currentIndex].toLowerCase()
+    requestAnimationFrame(() => {
+      this.emit('game_start', this)
+    })
   }
 
   /**
    * The current game state.
+   * @public
    */
   @observable state: GameState = 'game_starting'
 
   /**
-   * Set a new state.
-   *
-   * @param state The game state to set.
+   * The current settings.
+   * @public
    */
-  @action setState(state: GameState) {
-    this.state = state
-    this.emit('state_change', this)
+  @observable settings: GameSettings = {
+    casing: 'lower',
+    ignoreCasing: true,
+  }
+
+  /**
+   * The current letter index.
+   * @public
+   */
+  @observable currentIndex = 0
+
+  /**
+   * The current word (in its cased format).
+   * @public
+   */
+  @computed get currentWord() {
+    const { _currentWord, settings } = this
+
+    switch (settings.casing) {
+      case 'lower': {
+        return _currentWord.toLowerCase()
+      }
+      case 'upper': {
+        return _currentWord.toUpperCase()
+      }
+      case 'start': {
+        const letters = _currentWord.toLowerCase().split('')
+        letters[0] = letters[0].toUpperCase()
+        return letters.join('')
+      }
+    }
   }
 
   /**
    * Dispatch an event to the game.
    *
    * @param event The event to dispatch.
+   * @public
    */
   @action dispatch(event: UiEvent) {
     switch (event.type) {
-      case 'game_reset': {
-        this.resetGame()
+      case 'ui_ready': {
+        this.setState('word_transitioning_in')
+        break
+      }
+      case 'change_setting': {
+        Object.assign(this.settings, event.setting)
         break
       }
       case 'click': {
@@ -115,12 +133,52 @@ export class Game extends EventEmitter<GameEvents> {
     }
   }
 
-  @action unloadCurrentWord() {
+  /* ------------------- Private API ------------------ */
+
+  /**
+   * The array of words.
+   */
+  private words = this.getWords()
+
+  /**
+   * The current word (in its raw format).
+   * @private
+   */
+  @observable private _currentWord = this.getNextWord()
+
+  /**
+   * The next letter.
+   * @public
+   */
+  @computed private get nextLetter() {
+    return this.currentWord[this.currentIndex]
+  }
+
+  /**
+   * Set a new state.
+   *
+   * @param state The game state to set.
+   * @public
+   */
+  @action private setState(state: GameState) {
+    this.state = state
+    this.emit('state_change', this)
+  }
+
+  @action private getWords(maxLength = 3) {
+    return ALL_WORDS.filter((word) => word.length <= maxLength).filter(isNotProfane)
+  }
+
+  @action private getNextWord() {
+    return sampleAndRemove(this.words)
+  }
+
+  @action private unloadCurrentWord() {
     // Enter the word_starting state
     this.setState('word_transitioning_out')
   }
 
-  @action loadNextWord() {
+  @action private loadNextWord() {
     // Enter the word_starting state
     if (this.words.length === 0) {
       // If we've somehow ran out of words, reset the game instead
@@ -129,15 +187,21 @@ export class Game extends EventEmitter<GameEvents> {
     }
 
     this.currentIndex = 0
-    this.currentWord = this.getNextWord()
+    this._currentWord = this.getNextWord()
     this.emit('word_start', this)
     this.setState('word_spelling')
     this.setState('word_transitioning_in')
   }
 
-  @action handleLetterInput(key: string) {
+  @action private handleLetterInput(key: string) {
+    const { ignoreCasing } = this.settings
+
     // Did the user just press the right key?
-    if (key.toLowerCase() === this.nextLetter) {
+    const isRight = ignoreCasing
+      ? key.toLowerCase() === this.nextLetter.toLowerCase()
+      : key === this.nextLetter
+
+    if (isRight) {
       this.currentIndex++
       this.emit('input_right', this)
     } else {
@@ -150,25 +214,17 @@ export class Game extends EventEmitter<GameEvents> {
     }
   }
 
-  @action completeWord() {
+  @action private completeWord() {
     this.emit('word_complete', this)
     this.setState('word_complete')
   }
 
-  @action resetGame() {
+  @action private resetGame() {
     this.words = this.getWords()
     this.currentIndex = 0
-    this.currentWord = this.getNextWord()
+    this._currentWord = this.getNextWord()
     this.emit('game_reset', this)
     this.setState('word_spelling')
-  }
-
-  @action getWords(maxLength = 3) {
-    return ALL_WORDS.filter((word) => word.length <= maxLength).filter(isNotProfane)
-  }
-
-  @action getNextWord() {
-    return sampleAndRemove(this.words)
   }
 }
 
