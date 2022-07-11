@@ -50,15 +50,15 @@ export const Settings = observer(function Settings() {
             onValueChange={handleCasingValueChange}
           >
             <RadioGroup.Item value="lower">
-              <span>Lowercase</span>
+              <span>Lower</span>
               <RadioCheckmark />
             </RadioGroup.Item>
             <RadioGroup.Item value="upper">
-              <span>Uppercase</span>
+              <span>Upper</span>
               <RadioCheckmark />
             </RadioGroup.Item>
             <RadioGroup.Item value="start">
-              <span>Startcase</span>
+              <span>Start </span>
               <RadioCheckmark />
             </RadioGroup.Item>
           </RadioGroup.Root>
