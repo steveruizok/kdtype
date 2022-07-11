@@ -1,65 +1,82 @@
-import { useState } from 'react'
+import * as Popover from '@radix-ui/react-popover'
+import * as React from 'react'
+import * as RadioGroup from '@radix-ui/react-radio-group'
+import * as Checkbox from '@radix-ui/react-checkbox'
+import { observer } from 'mobx-react-lite'
+import { useGame } from '~hooks/useGameContext'
+import { GameSettings } from '~game'
+import { CheckmarkIcon } from '~components/icons/CheckmarkIcon'
+import { SettingsIcon } from '~components/icons/SettingsIcon'
 
-type Props = {
-  casingSetting: string
-  setCasingSetting: (value: string) => void
-}
+export const Settings = observer(function Settings() {
+  const { game } = useGame()
 
-export const Settings = ({ casingSetting, setCasingSetting }: Props) => {
-  const [settingsActive, setSettingsActive] = useState<boolean>(false)
+  const handleCasingValueChange = React.useCallback((value: GameSettings['casing']) => {
+    game.dispatch({ type: 'change_setting', setting: { casing: value } })
+  }, [])
 
-  const renderSettingsButton = () => {
-    return (
-      <button className="settings-button" onClick={() => setSettingsActive(true)}>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className="feather feather-settings"
-        >
-          <circle cx="12" cy="12" r="3"></circle>
-          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-        </svg>
-      </button>
-    )
-  }
+  const handleIgnoreCasingValueChange = React.useCallback((value: GameSettings['ignoreCasing']) => {
+    game.dispatch({ type: 'change_setting', setting: { ignoreCasing: value } })
+  }, [])
 
-  const renderSettings = () => {
-    return (
-      <div className="settings-content">
-        <h3>Settings</h3>
-        <h4>Lower or uppercase?</h4>
-        <div className="casing-setting" onChange={() => setCasingSetting('lowercase')}>
-          <label htmlFor="lowercase">Lowercase</label>
-          <input
-            id="lowercase"
-            type="radio"
-            defaultChecked
-            name="casing-setting"
-            checked={casingSetting === 'lowercase'}
-          />
-        </div>
-        <div className="casing-setting" onChange={() => setCasingSetting('uppercase')}>
-          <label htmlFor="uppercase">Uppercase</label>
-          <input
-            id="uppercase"
-            type="radio"
-            name="casing-setting"
-            checked={casingSetting === 'uppercase'}
-          />
-        </div>
-      </div>
-    )
-  }
   return (
-    <div className="settings-container" onMouseLeave={() => setSettingsActive(false)}>
-      {settingsActive ? renderSettings() : renderSettingsButton()}
-    </div>
+    <Popover.Root>
+      <Popover.Anchor className="settings-anchor">
+        <Popover.Trigger asChild>
+          <button className="settings-button">
+            <SettingsIcon />
+          </button>
+        </Popover.Trigger>
+      </Popover.Anchor>
+      <Popover.Content className="settings-content" sideOffset={8}>
+        <h3>Settings</h3>
+        <h4>Casing</h4>
+        <div className="section">
+          <RadioGroup.Root
+            dir="ltr"
+            value={game.settings.casing}
+            onValueChange={handleCasingValueChange}
+          >
+            <RadioGroup.Item value="lower">
+              <span>Lower</span>
+              <RadioCheckmark />
+            </RadioGroup.Item>
+            <RadioGroup.Item value="upper">
+              <span>Upper</span>
+              <RadioCheckmark />
+            </RadioGroup.Item>
+            <RadioGroup.Item value="start">
+              <span>Start </span>
+              <RadioCheckmark />
+            </RadioGroup.Item>
+          </RadioGroup.Root>
+          <hr />
+          <Checkbox.Root
+            dir="ltr"
+            className="settings-button"
+            checked={game.settings.ignoreCasing}
+            onCheckedChange={handleIgnoreCasingValueChange}
+          >
+            <span>Ignore Casing</span>
+            <CheckboxCheckmark />
+          </Checkbox.Root>
+        </div>
+      </Popover.Content>
+    </Popover.Root>
+  )
+})
+
+const RadioCheckmark = () => {
+  return (
+    <RadioGroup.Indicator asChild>
+      <CheckmarkIcon />
+    </RadioGroup.Indicator>
+  )
+}
+const CheckboxCheckmark = () => {
+  return (
+    <Checkbox.Indicator asChild>
+      <CheckmarkIcon />
+    </Checkbox.Indicator>
   )
 }

@@ -2,7 +2,8 @@
 
 body {
   margin: 0;
-  font-family: 'Itim', -apple-system, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow: hidden;
@@ -29,10 +30,10 @@ body {
 .currentword {
   font-size: 160px;
   font-weight: bold;
-  text-transform: lowercase;
   transform-origin: center center;
   opacity: 0;
   color: black;
+  font-family: 'Itim', -apple-system, sans-serif;
   transition: all 0.5s cubic-bezier(0.215, 0.61, 0.355, 1);
 }
 
@@ -98,10 +99,6 @@ body {
   animation-timing-function: cubic-bezier(0.28, 0.84, 0.42, 1);
 }
 
-.uppercase .currentword {
-  text-transform: uppercase;
-}
-
 @keyframes letter_current {
   from {
     transform: scale(1) translateY(0);
@@ -132,43 +129,87 @@ body {
   }
 }
 
-.settings-container {
+/* -------------------- Settings -------------------- */
+
+.settings-anchor {
   position: absolute;
   bottom: 8px;
   right: 8px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif,
-    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
   z-index: 10;
-}
-.settings-container h3 {
-  margin-block-end: 4px;
-  color: rgb(0 0 0 / 85%);
-}
-
-.settings-container h4 {
-  margin-block-start: 0px;
-  margin-block-end: 16px;
-  font-weight: 400;
-  color: rgb(0 0 0 / 65%);
 }
 
 .settings-content {
-  padding: 16px;
-}
-
-.casing-setting {
+  min-width: 144px;
   display: flex;
-  inline-size: 110px;
-  margin-block-end: 4px;
+  gap: 8px;
+  flex-direction: column;
+  box-shadow: 1px 1px 8px -2px rgba(0, 0, 0, 0.25);
+  border-radius: 8px;
+  padding: 8px;
+}
+
+.settings-content h3 {
+  margin: 0;
+  color: rgb(0 0 0 / 85%);
+  padding: 8px 4px;
+}
+
+.settings-content h4 {
+  margin: 0;
+  font-weight: 400;
+  font-size: 12px;
+  color: rgb(0 0 0 / 65%);
+  padding: 0px 4px;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  margin-block-start: 8px;
+  margin-block-end: 8px;
+  margin: 0px;
+  padding: 4px;
+  border: 1px solid rgb(222, 222, 222);
+  border-radius: 6px;
+}
+
+.section hr {
+  width: calc(100% + 8px);
+  height: 0px;
+  border-top: 0px;
+  margin: 4px -4px;
+  border-bottom: 1px solid rgb(222, 222, 222);
+}
+
+.settings-content button {
+  position: relative;
+  display: flex;
+  background: none;
+  border: none;
+  padding: 8px;
+  border-radius: 4px;
+  width: 100%;
+  height: 32px;
+  gap: 8px;
+}
+
+.settings-content button:hover {
+  background-color: rgba(0 0 0 / 10%);
   cursor: pointer;
 }
 
-.casing-setting * {
-  cursor: pointer;
+.settings-content span:nth-of-type(1) {
+  flex-grow: 2;
+  text-align: left;
 }
 
-.casing-setting label {
-  inline-size: 100%;
+.settings-content .checkmark {
+  align-self: flex-end;
+  right: 8px;
+  width: 16px;
+  height: 16px;
+  color: black;
+  stroke-width: 0px;
 }
 
 .settings-button {

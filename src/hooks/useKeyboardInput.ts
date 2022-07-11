@@ -13,8 +13,8 @@ export function useKeyboardInput() {
       elm.value = ''
     }
 
-    const handleKeyDown = (e: KeyboardEvent) => {
-      game.dispatch({ type: 'input', key: e.key.toLowerCase() })
+    const handleKeyDown = ({ key }: KeyboardEvent) => {
+      game.dispatch({ type: 'input', key })
     }
 
     window.addEventListener('keydown', handleKeyDown)
