@@ -5,6 +5,7 @@ import { useSoundEffects } from '~hooks/useSoundEffects'
 import { Celebration } from '~components/Celebration'
 import { CurrentWord } from '~components/CurrentWord'
 import { Settings } from '~components/Settings'
+import { ProgressBar } from '~components/ProgressBar'
 
 export const GameScreen = observer(function GameScreen() {
   const { game } = useGame()
@@ -34,6 +35,7 @@ export const GameScreen = observer(function GameScreen() {
       <Settings />
       <CurrentWord />
       <Celebration />
+      <ProgressBar />
     </div>
   )
 })
